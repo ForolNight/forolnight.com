@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forol Night [^¥^] Download</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@500&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: #050a0a; background-image: radial-gradient(circle at 50% 50%, #0a1a1a 0%, #000 100%), repeating-linear-gradient(0deg, rgba(0, 255, 102, 0.03) 0px, rgba(0, 255, 102, 0.03) 1px, transparent 1px, transparent 2px); background-size: 100% 100%, 100% 3px; height: 100vh; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .navbar { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; border-bottom: 1px solid rgba(0, 255, 102, 0.3); background: rgba(0,10,5,0.9); backdrop-filter: blur(15px); z-index: 100; }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
+        .back-link { text-decoration: none; color: #00ff66; font-size: 11px; font-weight: 800; letter-spacing: 1px; transition: 0.3s; border: 1px solid #00ff66; padding: 6px 12px; border-radius: 2px; font-family: 'JetBrains Mono', monospace; }
+        .back-link:hover { background: #00ff66; color: #000; box-shadow: 0 0 10px #00ff66; }
+        .logo-text { font-family: 'Space Grotesk', sans-serif; font-size: 16px; letter-spacing: 3px; margin: 0; }
+        .white { color: #fff; }
+        .green { color: #00ff66; text-shadow: 0 0 8px rgba(0, 255, 102, 0.5); }
+        .sys-status { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #00ff66; opacity: 0.7; }
+        .download-card { width: 90%; max-width: 440px; background: rgba(0, 15, 10, 0.9); border: 1px solid rgba(0, 255, 102, 0.2); padding: 30px; text-align: center; box-shadow: 0 0 40px rgba(0, 255, 102, 0.05); position: relative; margin-top: 50px; }
+        .img-wrapper { position: relative; width: 100%; height: 180px; overflow: hidden; margin-bottom: 25px; border: 1px solid rgba(0, 255, 102, 0.3); }
+        .game-image { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8) contrast(1.2); }
+        .stats-container { display: flex; gap: 10px; margin-bottom: 25px; }
+        .data-block { flex: 1; background: rgba(0, 255, 102, 0.03); border-top: 2px solid #00ff66; padding: 12px 5px; text-align: center; }
+        .data-label { font-family: 'JetBrains Mono', monospace; font-size: 8px; color: #666; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .data-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: #fff; }
+        .viewer-accent { color: #00ff66; text-shadow: 0 0 5px rgba(0,255,102,0.5); }
+        .dl-btn { display: block; width: 100%; padding: 18px; background: #00ff66; color: #000; text-decoration: none; border-radius: 0px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; border: none; transition: 0.3s; font-family: 'JetBrains Mono', monospace; }
+        .dl-btn:hover { background: #fff; transform: translateY(-2px); }
+        #timer-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10; flex-direction: column; align-items: center; justify-content: center; }
+        @media (max-width: 500px) { .navbar { padding: 12px 15px; } .logo-text { font-size: 13px; letter-spacing: 1px; } .sys-status { display: none; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="/UserEnterFace.html" class="back-link">BACK</a>
+            <h1 class="logo-text"><span class="white">FOROL</span> <span class="green">NIGHT</span></h1>
+        </div>
+        <div class="sys-status">RECOVERY_MODE: ACTIVE</div>
+    </nav>
+
+    <div class="download-card">
+        <div id="timer-overlay">
+            <h2 style="color:#00ff66; font-family:'JetBrains Mono'; font-size: 14px;">[DOWNLOAD STARTED IN]</h2>
+            <div style="font-size: 50px; color:#00ff66; font-family:'JetBrains Mono';" id="countdown-number">10</div>
+            <p style="font-family:'JetBrains Mono'; font-size: 10px; color: #555;">[PREPARING DOWNLOAD: <span id="packets">0</span>%]</p>
+        </div>
+
+        <div class="img-wrapper">
+            <img id="game-image-el" src="" alt="Game Cover" class="game-image">
+        </div>
+
+        <h2 id="game-title" style="font-family:'Space Grotesk'; letter-spacing:2px; margin-bottom:20px; font-size: 24px;">---</h2>
+
+        <div class="stats-container">
+            <div class="data-block">
+                <span class="data-label">SIZE</span>
+                <span id="game-size" class="data-value">---</span>
+            </div>
+            <div class="data-block">
+                <span class="data-label">VIEWERS</span>
+                <span class="data-value viewer-accent" id="live-viewers">---</span>
+            </div>
+            <div class="data-block">
+                <span class="data-label">VERSION</span>
+                <span id="game-version" class="data-value">---</span>
+            </div>
+        </div>
+
+        <button id="start-dl" class="dl-btn">Download</button>
+        <a href="https://youtube.com/@forolnight" target="_blank" style="font-size: 10px; color: #444; text-decoration: none; margin-top: 15px; display: block; font-family: 'JetBrains Mono';">View Tutorial On Youtube</a>
+    </div>
+
+    <script>
+        // --- 1. Variables ---
+        const gameData = {
+            name: "Lagoniko",
+            size: "200MB",
+            version: "v1.0.0",
+            viewers: "1,00,000",
+            imgSrc: "/Games/HorizonLegacy/img.png",
+            fileUrl: "/Games/HorizonLegacy/HorizonLegacy.apk" // Actual download path
+        };
+
+        // --- 2. Fill Page Data ---
+        document.getElementById('game-image-el').src = gameData.imgSrc;
+        document.getElementById('game-title').innerText = gameData.name;
+        document.getElementById('game-size').innerText = gameData.size;
+        document.getElementById('game-version').innerText = gameData.version;
+        document.getElementById('live-viewers').innerText = gameData.viewers;
+
+        // --- 3. Logic for Button & Timer ---
+        const startBtn = document.getElementById('start-dl');
+        const overlay = document.getElementById('timer-overlay');
+        const countdownNumber = document.getElementById('countdown-number');
+        const packetsPercent = document.getElementById('packets');
+
+        startBtn.addEventListener('click', function() {
+            // Show the decryption overlay
+            overlay.style.display = 'flex';
+            
+            let timeLeft = 10;
+            let progress = 0;
+
+            const timer = setInterval(() => {
+                timeLeft--;
+                progress += 10;
+
+                // Update text on screen
+                countdownNumber.innerText = timeLeft;
+                packetsPercent.innerText = progress;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    overlay.style.display = 'none'; // Hide overlay
+                    
+                    // Start the download
+                    const link = document.createElement('a');
+                    link.href = gameData.fileUrl;
+                    link.download = gameData.name + ".apk";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    // Update button UI
+                    startBtn.innerText = "ACCESS GRANTED";
+                    startBtn.style.background = "#fff";
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
