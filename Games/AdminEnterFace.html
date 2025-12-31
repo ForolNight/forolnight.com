@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forol Night [^¥^] AdminPanel</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
+        
+        body { 
+            background-color: #000; 
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%); 
+            height: 100vh; display: flex; flex-direction: column; align-items: center; overflow: hidden; color: white; 
+        }
+
+        /* --- Security Lock --- */
+        #securityLock {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+        .lock-box {
+            width: 90%; max-width: 350px; text-align: left; background: rgba(255,255,255,0.03); 
+            padding: 40px 20px; border-radius: 25px; border: 1px solid rgba(0, 255, 102, 0.2);
+        }
+        .lock-box input {
+            width: 100%; background: #111; border: 1px solid #222; padding: 14px; border-radius: 10px; 
+            color: #00ff66; text-align: center; margin-bottom: 12px; outline: none; font-size: 14px;
+        }
+        .unlock-btn {
+            width: 100%; background: #00ff66; color: #000; border: none; padding: 14px; border-radius: 10px;
+            font-weight: 900; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* --- UI Header --- */
+        .header-bar { width: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10; }
+        .header-bar::after { content: ""; width: 220px; height: 2px; background: linear-gradient(90deg, transparent, #00ff66, transparent); margin-top: 15px; box-shadow: 0 0 15px rgba(0, 255, 102, 0.8); }
+        .top-logo { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .top-logo .green { color: #00ff66; text-shadow: 0 0 10px #00ff66; }
+        .menu-toggle { position: absolute; left: 25px; top: 22px; font-size: 26px; cursor: pointer; color: #00ff66; z-index: 1001; }
+        .add-action-btn { position: absolute; right: 25px; top: 22px; font-size: 24px; cursor: pointer; color: #00ff66; display: none; }
+
+        /* --- Sidebar --- */
+        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: #0a0a0a; border-right: 1px solid #1a1a1a; z-index: 2000; transition: 0.4s; padding: 30px 20px; }
+        .sidebar.active { left: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; z-index: 1999; }
+        .overlay.active { display: block; }
+        .side-btn { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 15px; border-radius: 12px; color: white; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 13px; font-weight: 600; text-transform: uppercase;}
+        .side-btn.active { background: #00ff66; color: #000; font-weight: 900; }
+
+        /* --- Main Panels --- */
+        .main-container { width: 95%; max-width: 550px; flex: 1; overflow-y: auto; padding-bottom: 90px; scrollbar-width: none; margin-top: 20px;}
+        .section { display: none; width: 100%; }
+        .section.active { display: block; }
+        .glass-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 25px; padding: 22px; margin-bottom: 20px; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .input-group input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid #222; padding: 12px; border-radius: 10px; color: white; outline: none; }
+        .save-btn { width: 100%; background: #00ff66; color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; }
+
+        /* --- Navigation --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0, 255, 102, 0.1); z-index: 100; }
+        .nav-item { color: #555; font-size: 14px; font-weight: 600; cursor: pointer; text-transform: lowercase; }
+        .nav-item.active { color: #fff; }
+        .tab-btn { flex: 1; background: #111; border: 1px solid #222; color: #555; padding: 10px; border-radius: 10px; font-size: 10px; font-weight: 700; cursor: pointer; }
+        .tab-btn.active { background: #00ff66; color: #000; }
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body>
+
+    <div id="securityLock">
+        <div class="lock-box">
+            <a href="/index.html" style="text-decoration: none; color: #FFDBAE; text-align: left; border: 2px solid #FFAF5E; padding-left: 2px; padding-right: 6px; font-size: 20px;">BACK👉🏻U</a><br><br><br>
+            <h2 style="color:#00ff66; font-weight:900; margin-bottom: 20px;">SYSTEM LOCKED</h2>
+            <input type="text" id="adminUser" placeholder="Username">
+            <input type="password" id="secretKey" placeholder="Security Key">
+            <button class="unlock-btn" onclick="checkLock()">Unlock System</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="side-btn active" id="side-home" onclick="switchSidebarMenu('home')">🏠 Home</div>
+        <div class="side-btn" id="side-projects" onclick="switchSidebarMenu('projects')">📂 Projects</div>
+        <div class="side-btn" id="side-members" onclick="switchSidebarMenu('members')">👥 Members</div>
+    </div>
+
+    <div class="header-bar">
+        <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+        <div class="top-logo">FOROL <span class="green">NIGHT</span></div>
+        <div class="add-action-btn" id="addBtn" onclick="handleAddClick()">➕</div>
+    </div>
+
+    <div class="main-container">
+        <div id="home" class="section active">
+            <div class="glass-panel" style="text-align:center;">
+                <h2 id="chartTitle" style="color:#444; font-size:10px; font-weight:900;">TODAY LOGINS</h2>
+                <div id="loginCount" style="font-size:60px; font-weight:900; color:#00ff66; margin:10px 0;">0</div>
+                <div style="display:flex; gap:8px;">
+                    <button class="tab-btn active" onclick="updateChart('Daily', this)">Daily</button>
+                    <button class="tab-btn" onclick="updateChart('Weekly', this)">Weekly</button>
+                    <button class="tab-btn" onclick="updateChart('Monthly', this)">Monthly</button>
+                </div>
+            </div>
+            <div class="glass-panel" style="height:250px;"><canvas id="activityChart"></canvas></div>
+        </div>
+
+        <div id="people" class="section">
+            <div class="glass-panel">
+                <h3 style="color:#00ff66; font-size:14px; margin-bottom:20px;">LIVE LOGINS</h3>
+                <div id="userLoginList"></div>
+            </div>
+        </div>
+
+        <div id="projects" class="section">
+            <div id="projectForm" class="glass-panel" style="display:none;">
+                <h3 style="color:#00ff66; margin-bottom:15px;">ADD PROJECT</h3>
+                <div class="input-group"><label>Image URL</label><input type="text" id="gameCover"></div>
+                <div class="input-group"><label>HTML Path/URL</label><input type="text" id="gameUrl"></div>
+                <div class="input-group"><label>Name</label><input type="text" id="gameName"></div>
+                <div style="display:flex; gap:10px;">
+                    <div class="input-group" style="flex:1;"><label>Ver</label><input type="text" id="gameVer"></div>
+                    <div class="input-group" style="flex:1;"><label>Size</label><input type="text" id="gameSize"></div>
+                </div>
+                <button class="save-btn" onclick="saveProject()">SAVE PROJECT</button>
+                <button class="tab-btn" style="width:100%; margin-top:10px;" onclick="hideForms()">CANCEL</button>
+            </div>
+            <div id="projectList" class="glass-panel">
+                <h3 style="color:#00ff66; margin-bottom:20px;">PROJECT LIST</h3>
+                <div id="gamesDisplay"></div>
+            </div>
+        </div>
+
+        <div id="members" class="section">
+            <div id="memberForm" class="glass-panel" style="display:none;">
+                <h3 style="color:#00ff66; margin-bottom:15px;">ADD MEMBER</h3>
+                <div class="input-group"><label>Name</label><input type="text" id="memName"></div>
+                <div class="input-group"><label>Age</label><input type="number" id="memAge"></div>
+                <div class="input-group"><label>Number</label><input type="number" id="memNum"></div>
+                <button class="save-btn" onclick="saveMember()">SAVE NUMBER</button>
+                <button class="tab-btn" style="width:100%; margin-top:10px;" onclick="hideForms()">CANCEL</button>
+            </div>
+            <div id="memberList" class="glass-panel"><h3 style="color:#00ff66; margin-bottom:20px;">MEMBER LIST</h3><div id="membersDisplay"></div></div>
+        </div>
+
+        <div id="profile" class="section">
+            <div class="glass-panel" style="text-align:center;">
+                <div style="width:80px; height:80px; background:#000; border:2px solid #00ff66; border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:30px;">👤</div>
+                <h2 style="font-weight:900;">ADMIN PANEL</h2>
+                <button onclick="clearData()" class="save-btn" style="background:#ff4444; margin-top:30px;">RESET SYSTEM DATA</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" id="nav-status" onclick="switchSubTab('home', 'nav-status')">status</div>
+        <div class="nav-item" id="nav-people" onclick="switchSubTab('people', 'nav-people')">people</div>
+        <div class="nav-item" id="nav-profile" onclick="switchSubTab('profile', 'nav-profile')">profile</div>
+    </div>
+    <script>
+    const MASTER_USER = "Admin";
+    const MASTER_KEY = "00.11-48.08-74.86-45.49-29.94";
+    let myChart;
+    let currentPeriod = 'Daily';
+    let activeMenu = 'home';
+
+    // --- LOCK LOGIC ---
+    function checkLock() {
+        const user = document.getElementById('adminUser').value;
+        const key = document.getElementById('secretKey').value;
+        if(user === MASTER_USER && key === MASTER_KEY) {
+            document.getElementById('securityLock').style.display = 'none';
+            sessionStorage.setItem('adminUnlocked', 'true');
+            updateChart('Daily');
+        } else { alert("Access Denied!"); }
+    }
+    window.onload = () => {
+        if(sessionStorage.getItem('adminUnlocked') === 'true') document.getElementById('securityLock').style.display = 'none';
+        updateChart('Daily');
+    };
+
+    // --- NAVIGATION ---
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+    function switchSidebarMenu(id) {
+        toggleSidebar(); activeMenu = id;
+        document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('side-' + id).classList.add('active');
+        const bNav = document.getElementById('bottomNav');
+        const addBtn = document.getElementById('addBtn');
+        if(id === 'home') { bNav.style.display = 'flex'; addBtn.style.display = 'none'; switchSubTab('home', 'nav-status'); }
+        else { bNav.style.display = 'none'; addBtn.style.display = 'block'; showSection(id); }
+    }
+    function switchSubTab(secId, navId) {
+        showSection(secId);
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(navId).classList.add('active');
+    }
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        hideForms();
+        if(id === 'home') updateChart(currentPeriod);
+        if(id === 'projects') renderGames();
+        if(id === 'members') renderMembers();
+        if(id === 'people') renderPeople();
+    }
+    function handleAddClick() {
+        if(activeMenu === 'projects') { document.getElementById('projectForm').style.display = 'block'; document.getElementById('projectList').style.display = 'none'; }
+        if(activeMenu === 'members') { document.getElementById('memberForm').style.display = 'block'; document.getElementById('memberList').style.display = 'none'; }
+    }
+    function hideForms() {
+        document.querySelectorAll('#projectForm, #memberForm').forEach(f => f.style.display = 'none');
+        document.querySelectorAll('#projectList, #memberList').forEach(l => l.style.display = 'block');
+    }
+
+    // --- CHART LOGIC (Daily, Weekly, Monthly) ---
+    function updateChart(period, btn) {
+        if(period) currentPeriod = period;
+        if(btn) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+        const title = document.getElementById('chartTitle');
+        const logins = JSON.parse(localStorage.getItem('f_logins') || '[]');
+        const now = new Date();
+        let labels = [], data = [], count = 0;
+
+        if(currentPeriod === 'Daily') {
+            title.innerText = "TODAY LOGINS";
+            labels = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+            data = [0,0,0,0,0,0,0];
+            logins.forEach(l => { if(new Date(l).toDateString() === now.toDateString()) count++; data[(new Date(l).getDay()+1)%7]++; });
+        } else if(currentPeriod === 'Weekly') {
+            title.innerText = "RECENT WEEKLY LOGINS";
+            labels = ['WK1', 'WK2', 'WK3', 'WK4', 'WK5'];
+            data = [0,0,0,0,0];
+            logins.forEach(l => { if(new Date(l).getMonth() === now.getMonth()) data[Math.min(Math.floor((new Date(l).getDate()-1)/7), 4)]++; });
+            count = data[Math.min(Math.floor((now.getDate()-1)/7), 4)];
+        } else {
+            title.innerText = "RECENT MONTHLY LOGINS";
+            labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            data = Array(12).fill(0);
+            logins.forEach(l => data[new Date(l).getMonth()]++);
+            count = data[now.getMonth()];
+        }
+
+        document.getElementById('loginCount').innerText = count;
+        const ctx = document.getElementById('activityChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: { labels, datasets: [{ data, borderColor: '#00ff66', backgroundColor: 'rgba(0,255,102,0.1)', fill: true, tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true }, x: { ticks: { color: '#555' } } }, plugins: { legend: { display: false } } }
+        });
+    }
+
+    // --- PEOPLE (LOGIN DATA LINK) ---
+    function renderPeople() {
+        const data = JSON.parse(localStorage.getItem('f_users') || '[]');
+        const display = document.getElementById('userLoginList');
+        if(data.length === 0) { display.innerHTML = `<p style="color:#444; text-align:center; font-size:12px;">No Logins Yet</p>`; return; }
+        display.innerHTML = [...data].reverse().map((u, i) => `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid #1a1a1a; padding:12px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div><b style="color:#fff;">${u.name}</b> <span style="font-size:10px; color:#555;">(${u.age})</span><br><span style="color:#00ff66; font-size:11px;">${u.phone}</span></div>
+                <div style="text-align:right;"><span style="font-size:9px; color:#444;">${u.time}</span><br><span onclick="deleteItem('f_users', ${data.length-1-i}, renderPeople)" style="color:#ff4444; font-size:10px; cursor:pointer;">DEL</span></div>
+            </div>`).join('');
+    }
+
+    // --- SAVE & CLEAR FUNCTIONS ---
+    function saveProject() {
+        const imgI = document.getElementById('gameCover'), urlI = document.getElementById('gameUrl'), nameI = document.getElementById('gameName'), verI = document.getElementById('gameVer'), sizeI = document.getElementById('gameSize');
+        if(!nameI.value || !imgI.value || !urlI.value) return alert("Fill Name, Image and URL!");
+        let projects = JSON.parse(localStorage.getItem('f_projects') || '[]');
+        projects.push({ img: imgI.value, url: urlI.value, name: nameI.value, ver: verI.value, size: sizeI.value });
+        localStorage.setItem('f_projects', JSON.stringify(projects));
+        [imgI, urlI, nameI, verI, sizeI].forEach(input => input.value = ""); // CLEAR
+        showSection('projects');
+    }
+
+    function saveMember() {
+        const nameI = document.getElementById('memName'), ageI = document.getElementById('memAge'), numI = document.getElementById('memNum');
+        if(!nameI.value) return alert("Fill Name!");
+        let members = JSON.parse(localStorage.getItem('f_members') || '[]');
+        members.push({ name: nameI.value, age: ageI.value, num: numI.value });
+        localStorage.setItem('f_members', JSON.stringify(members));
+        [nameI, ageI, numI].forEach(input => input.value = ""); // CLEAR
+        showSection('members');
+    }
+
+    function renderGames() {
+        const data = JSON.parse(localStorage.getItem('f_projects') || '[]');
+        document.getElementById('gamesDisplay').innerHTML = data.map((p, i) => `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid #1a1a1a; padding:12px; border-radius:15px; margin-bottom:10px; display:flex; align-items:center; gap:12px;">
+                <img src="${p.img}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                <div style="flex:1;"><b style="font-size:13px;">${p.name}</b> <span style="font-size:9px; color:#555;">v${p.ver}</span><br><span style="font-size:10px; color:#00ff66;">${p.size}</span></div>
+                <div onclick="deleteItem('f_projects', ${i}, renderGames)" style="color:#ff4444; font-size:10px; cursor:pointer;">DEL</div>
+            </div>`).join('');
+    }
+
+    function renderMembers() {
+        const data = JSON.parse(localStorage.getItem('f_members') || '[]');
+        document.getElementById('membersDisplay').innerHTML = data.map((m, i) => `
+            <div style="background:rgba(255,255,255,0.02); border:1px solid #1a1a1a; padding:12px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div><b>${m.name}</b> <span style="font-size:10px; color:#555;">(${m.age})</span><br><span style="color:#00ff66;">${m.num}</span></div>
+                <div onclick="deleteItem('f_members', ${i}, renderMembers)" style="color:#ff4444; font-size:10px; cursor:pointer;">DEL</div>
+            </div>`).join('');
+    }
+
+    function deleteItem(key, idx, cb) {
+        let data = JSON.parse(localStorage.getItem(key));
+        data.splice(idx, 1); localStorage.setItem(key, JSON.stringify(data)); cb();
+    }
+    function clearData() { if(confirm("Clear Everything?")) { localStorage.clear(); location.reload(); } }
+</script>
+</body>
+</html>
