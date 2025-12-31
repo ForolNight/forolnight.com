@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forol Night [^¥^] Login</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
+        
+        body {
+            background-color: #000;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; overflow: hidden;
+        }
+
+        .top-logo { margin-bottom: 40px; font-size: 50px; font-weight: 900; text-transform: uppercase; text-align: center; line-height: 1; }
+        .white { color: #fff; text-shadow: 0 0 15px #fff; }
+        .green { color: #00ff66; text-shadow: 0 0 20px #00ff66; }
+
+        .login-card { backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 30px; box-shadow: 0 25px 60px rgba(0,0,0,0.9); width: 90%; max-width: 350px; }
+        
+        .form-group { margin-bottom: 12px; }
+        label { display: block; color: #888; font-size: 10px; font-weight: 700; margin-left: 15px; margin-bottom: 4px; text-transform: uppercase; }
+        
+        input {
+            width: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+            padding: 0 20px; border-radius: 50px; color: white; font-size: 14px; outline: none;
+            line-height: 45px; height: 45px; display: block;
+        }
+        input:focus { border-color: #00ff66; }
+
+        .btn-start {
+            width: 100%; margin-top: 15px; padding: 14px; border: none; border-radius: 50px;
+            background: #00ff66; color: #000; font-size: 15px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .btn-start:active { transform: scale(0.98); }
+
+        #errorDisplay { color: #ff4444; font-size: 11px; text-align: center; margin-top: 15px; font-weight: 600; min-height: 15px; opacity: 0; transition: 0.3s; }
+        
+        .AUFL {
+            text-decoration: none;
+            color: #00ff66;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-logo">
+        <span class="white">Forol</span>
+        <span class="green">N<a class="AUFL" href="/Games/AdminEnterFace.html">i</a>ght</span>
+    </div>
+
+    <div class="login-card">
+        <form onsubmit="connectUser(event)">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="nameInput" placeholder="Enter Your Name" required>
+            </div>
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" id="ageInput" placeholder="Enter Your Age" required 
+                       oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);">
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="phoneInput" placeholder="Enter Your Phone Number" required 
+                       oninput="if(this.value.length > 11) this.value = this.value.slice(0, 11);">
+            </div>
+            <button type="submit" class="btn-start">Connect</button>
+            <div id="errorDisplay"></div>
+        </form>
+    </div>
+
+    <script>
+        function showError(msg) {
+            const err = document.getElementById('errorDisplay');
+            err.innerText = msg; 
+            err.style.opacity = "1";
+            setTimeout(() => { err.style.opacity = "0"; }, 3000);
+        }
+
+        function connectUser(event) {
+            event.preventDefault(); 
+            
+            const name = document.getElementById('nameInput').value.trim();
+            const age = parseInt(document.getElementById('ageInput').value);
+            const phone = document.getElementById('phoneInput').value.trim();
+
+            // লজিক: বয়স ১৫ বা তার বেশি হতে হবে (15+)
+            if (age < 15) { 
+                showError("Age Must Be 15 Or Above"); 
+                return; 
+            }
+
+            // ফোন নাম্বার ভ্যালিডেশন
+            const allowedPrefixes = ["013", "014", "015", "016", "017", "018", "019"];
+            if (phone.length !== 11 || !allowedPrefixes.includes(phone.substring(0, 3))) {
+                showError("Invalid Phone Number"); 
+                return;
+            }
+
+            const now = new Date();
+            
+            // অ্যাডমিন প্যানেলের সাথে লিঙ্ক করার ডেটা
+            const userData = { 
+                name: name, 
+                age: age, 
+                phone: phone, 
+                time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+            };
+            
+            // পিপল লিস্টে সেভ
+            const users = JSON.parse(localStorage.getItem('f_users') || '[]');
+            users.push(userData);
+            localStorage.setItem('f_users', JSON.stringify(users));
+            
+            // চার্ট আপডেট করার জন্য লগইন ডেটা সেভ
+            const logins = JSON.parse(localStorage.getItem('f_logins') || '[]');
+            logins.push(now.toISOString());
+            localStorage.setItem('f_logins', JSON.stringify(logins));
+
+            // সেশন ডাটা
+            localStorage.setItem('f_logged_in', 'true');
+            localStorage.setItem('f_current_user', name);
+            
+            // ড্যাশবোর্ডে রিডাইরেক্ট
+            window.location.href = 'UserEnterFace.html';
+        }
+    </script>
+</body>
+</html>
